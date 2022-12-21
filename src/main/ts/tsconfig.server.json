@@ -4,7 +4,8 @@
     "outDir": "./out-tsc/app-server" ,
     "module": "ES6" ,
     "types": [
-      "node"
+      "node",
+      "@angular/localize"
     ],
   } ,
   "files": [

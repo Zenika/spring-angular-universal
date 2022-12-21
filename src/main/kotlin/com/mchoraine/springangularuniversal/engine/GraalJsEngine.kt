@@ -13,9 +13,12 @@ class GraalJsEngine {
     private val cx: Context = initContext()
     private val source = initBundleSource()
     fun evaluate(templateName: String, writer: Writer, model: Map<String, Any>, locale: Locale) {
+        cx.enter()
         cx.getBindings("js").putMember("template", getTemplate(templateName))
+        cx.getBindings("js").putMember("url", "http://localhost:8080/")
         cx.getBindings("js").putMember("setHtmlContent", WriteContent(writer))
         cx.eval(source)
+        cx.leave()
     }
 
     private fun initContext(): Context {
@@ -25,7 +28,7 @@ class GraalJsEngine {
         val cx: Context = Context.newBuilder("js")
             .option("js.global-property", "true")
             .option("js.commonjs-require", "true")
-            .option("js.commonjs-core-modules-replacements", "http:./http,https:./http,os:./os,url:./http")
+            .option("js.commonjs-core-modules-replacements", "http:./http,https:./http,os:./os,url:./url")
             .option("js.commonjs-require-cwd", "/Users/mchoraine/Workspace/Perso/spring-angular-universal/src/main/ts")
             .allowAllAccess(true)
             .allowExperimentalOptions(true)
@@ -59,15 +62,15 @@ class GraalJsEngine {
 
     class NodeProcess(
     ) {
-        @HostAccess.Export
-        val versions: NodeProcessVersions = NodeProcessVersions()
+        @JvmField
+        var versions: NodeProcessVersions = NodeProcessVersions()
 
         class NodeProcessVersions {
-            @HostAccess.Export
-            val node = "GraalJS"
+            @JvmField
+            var node = "GraalJS"
 
-            @HostAccess.Export
-            val v8 = "V8"
+            @JvmField
+            var v8 = "V8"
         }
     }
 

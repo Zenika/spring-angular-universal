@@ -109,7 +109,7 @@
           "configurations": {
             "production": {
               "outputHashing": "media" ,
-              "sourceMap": true,
+              "sourceMap": false,
               "optimization": true
             } ,
             "development": {

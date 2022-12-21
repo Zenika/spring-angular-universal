@@ -1,0 +1,11 @@
+<div class="product-item thumbnail card" [@isLast]="isTheLast()? 'true': 'false'">
+    <img [src]="data.photo" alt="t-shirt" class="card-img">
+    <div class="card-body">
+        <h3>{{ data.title | uppercase }} - {{ data.price | currency:'EUR' }}</h3>
+        <p>{{ data.description }}</p>
+    </div>
+
+    <div class="card-footer">
+        <button mat-raised-button  (click)="addToBasketClick()" i18n="@@addToBasket">Ajoutez au panier</button>
+    </div>
+</div>

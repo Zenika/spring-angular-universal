@@ -1,0 +1,20 @@
+<header class="jumbotron">
+    <h1>Bienvenue sur Zenika Ecommerce</h1>
+
+    <p i18n="@@basketAmount">Votre panier s'élève à {{ total$ | async | currency:'EUR' }}</p>
+    <p><a mat-raised-button i18n="@@seeBasket">Voir mon panier</a></p>
+</header>
+
+<hr>
+
+<div class="row">
+    <div class="col-lg-12">
+        <h2 i18n="@@lastProduct">Derniers Produits</h2>
+    </div>
+</div>
+
+<div class="row text-center">
+    <ng-container *ngFor="let product of products$ | async; trackBy: byId">
+        <app-product class="col-md-3 col-sm-6" *ngIf="isAvailable(product)" [data]="product" (addToBasket)="addToBasket($event)"></app-product>
+    </ng-container>
+</div>

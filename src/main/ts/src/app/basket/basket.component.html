@@ -1,0 +1,51 @@
+<div class="card">
+  <div class="card-header">Basket</div>
+
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item" *ngFor="let product of basket$ | async">
+      {{product.title}} <span class="label label-primary pull-right">{{product.price | currency:'EUR'}}</span>
+    </li>
+  </ul>
+</div>
+
+<div class="card mt-3">
+  <div class="card-header">Order</div>
+
+  <div class="card-body">
+    <form (submit)="checkout($event)" [formGroup]="customerForm">
+      <div class="form-group">
+        <label class="control-label" for="name">Name</label>
+        <input type="text" id="name" class="form-control"
+               [ngClass]="{'is-valid': customerForm.controls.name.valid, 'is-invalid': customerForm.controls.name.touched && customerForm.controls.name.invalid}"
+               name="name" [formControl]="customerForm.controls.name">
+        <div class="invalid-feedback" *ngIf="customerForm.controls.name.hasError('required')">
+          Name is required
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="control-label" for="address">Address</label>
+        <textarea id="address" class="form-control" name="address"
+                  [ngClass]="{'is-valid': customerForm.controls.address.valid, 'is-invalid': customerForm.controls.address.touched && customerForm.controls.address.invalid}"
+                  [formControlName]="'address'"></textarea>
+        <div class="invalid-feedback" *ngIf="customerForm.controls.address.hasError('required')">
+          Address is required
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="control-label" for="creditCard">Credit card number</label>
+        <input id="creditCard" class="form-control" name="creditCard"
+               [ngClass]="{'is-valid': customerForm.controls.creditCard.valid, 'is-invalid': customerForm.controls.creditCard.touched && customerForm.controls.creditCard.invalid}"
+               [formControlName]="'creditCard'">
+        <div class="invalid-feedback" *ngIf="customerForm.controls.creditCard.hasError('required')">
+          Credit card is required
+        </div>
+        <div class="invalid-feedback" *ngIf="customerForm.controls.creditCard.hasError('pattern')">
+          Credit card is invalid
+        </div>
+      </div>
+      <button type="submit" class="btn btn-success pull-right" [disabled]="customerForm.invalid">Validate</button>
+    </form>
+  </div>
+</div>
