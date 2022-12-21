@@ -3,8 +3,9 @@ import { renderApplication } from '@angular/platform-server'
 import { AppComponent } from './src/app/app.component'
 
 declare function setHtmlContent (html: string): void
+declare let template: string
 
 renderApplication(AppComponent, {
   appId: 'server-app',
-  document: '<app-root></app-root>'
+  document: template
 }).then(html => setHtmlContent(html))

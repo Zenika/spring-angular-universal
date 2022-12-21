@@ -6,11 +6,11 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RestController
 
 
-@RestController
-class AppController(val angularUniversalTemplating: AngularUniversalTemplating) {
+@Controller
+class AppController() {
 
     @GetMapping(path = ["/", ""], produces = [MediaType.TEXT_HTML_VALUE])
     fun getIndex(): String {
-        return angularUniversalTemplating.render()
+        return "index"
     }
 }
