@@ -65,10 +65,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "ts:build:production"
+              "browserTarget": "spring-angular-universal:build:production"
             },
             "development": {
-              "browserTarget": "ts:build:development"
+              "browserTarget": "spring-angular-universal:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -76,7 +76,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "ts:build"
+            "browserTarget": "spring-angular-universal:build"
           }
         },
         "test": {
@@ -97,6 +97,29 @@
             ],
             "scripts": []
           }
+        },
+        "server": {
+          "builder": "@angular-devkit/build-angular:server" ,
+          "options": {
+            "outputPath": "dist/server" ,
+            "main": "server.ts" ,
+            "tsConfig": "tsconfig.server.json"
+
+          } ,
+          "configurations": {
+            "production": {
+              "outputHashing": "media" ,
+              "sourceMap": true,
+              "optimization": true
+            } ,
+            "development": {
+              "optimization": false ,
+              "sourceMap": true ,
+              "extractLicenses": false ,
+              "vendorChunk": true
+            }
+          } ,
+          "defaultConfiguration": "production"
         }
       }
     }

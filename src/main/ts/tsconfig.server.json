@@ -1,0 +1,13 @@
+{
+  "extends": "./tsconfig.json" ,
+  "compilerOptions": {
+    "outDir": "./out-tsc/app-server" ,
+    "module": "ES6" ,
+    "types": [
+      "node"
+    ],
+  } ,
+  "files": [
+    "server.ts"
+  ]
+}
