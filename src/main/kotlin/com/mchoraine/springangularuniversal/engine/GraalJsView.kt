@@ -36,6 +36,7 @@ class GraalJsView : AbstractTemplateView() {
         response: HttpServletResponse
     ) {
         model[REQUEST_VARIABLE_NAME] = request
+        model[REQUEST_URL_VARIABLE_NAME] = request.requestURL.toString()
         model[RESPONSE_VARIABLE_NAME] = response
         request.getSession(false)?.let {
             model[SESSION_VARIABLE_NAME] = it
@@ -63,7 +64,7 @@ class GraalJsView : AbstractTemplateView() {
             val elapsedMs = elapsed / NANO_PER_SECOND
             TIMER_LOGGER
                 .debug(
-                    "Pebble template \"{}\" with locale {} processed in {} nanoseconds (approx. {}ms)",
+                    "GraalJS template \"{}\" with locale {} processed in {} nanoseconds (approx. {}ms)",
                     templateName, locale, elapsed, elapsedMs
                 )
         }
@@ -83,9 +84,9 @@ class GraalJsView : AbstractTemplateView() {
 
     companion object {
         const val REQUEST_VARIABLE_NAME = "request"
+        const val REQUEST_URL_VARIABLE_NAME = "url"
         const val RESPONSE_VARIABLE_NAME = "response"
         const val SESSION_VARIABLE_NAME = "session"
-        private const val BEANS_VARIABLE_NAME = "beans"
         private const val NANO_PER_SECOND = 1000000
 
         /**

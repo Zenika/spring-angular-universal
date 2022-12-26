@@ -2,34 +2,29 @@ package com.mchoraine.springangularuniversal.engine
 
 import org.graalvm.polyglot.Context
 import org.graalvm.polyglot.HostAccess
-import org.graalvm.polyglot.Source
-import java.io.FileNotFoundException
 import java.io.Writer
 import java.util.*
 import java.util.function.Consumer
 import java.util.function.Supplier
 
+
 class GraalJsEngine {
-    private val cx: Context = initContext()
-    private val source = initBundleSource()
+
+    val source = initBundleSource()
+    val cx = initContext()
+    val templates = mapOf("index" to getTemplate("index"))
+
     fun evaluate(templateName: String, writer: Writer, model: Map<String, Any>, locale: Locale) {
-        cx.enter()
-        cx.getBindings("js").putMember("template", getTemplate(templateName))
-        cx.getBindings("js").putMember("url", "http://localhost:8080/")
-        cx.getBindings("js").putMember("setHtmlContent", WriteContent(writer))
-        cx.eval(source)
-        cx.leave()
+        val res = cx.getBindings("js").getMember("render").execute(templates[templateName], model)
+        res.invokeMember("then", WriteContent(writer))
     }
 
     private fun initContext(): Context {
-//        val ha = HostAccess.newBuilder(HostAccess.EXPLICIT) //warning: too permissive for use in production
-//            .allowAccess(java.util.function.Function::class.java.getMethod("apply", Any::class.java))
-//            .build()
         val cx: Context = Context.newBuilder("js")
             .option("js.global-property", "true")
             .option("js.commonjs-require", "true")
             .option("js.commonjs-core-modules-replacements", "http:./http,https:./http,os:./os,url:./url")
-            .option("js.commonjs-require-cwd", "/Users/mchoraine/Workspace/Perso/spring-angular-universal/src/main/ts")
+            .option("js.commonjs-require-cwd", "/Users/mchoraine/Workspace/Perso/spring-angular-universal/src/main/resources/commonjs")
             .allowAllAccess(true)
             .allowExperimentalOptions(true)
             .build()
@@ -38,14 +33,12 @@ class GraalJsEngine {
         cx.getBindings("js").putMember("setInterval", MockTimer())
         cx.getBindings("js").putMember("clearTimeout", MockTimer())
         cx.getBindings("js").putMember("clearInterval", MockTimer())
+        cx.getBindings("js").putMember("render", null)
+        cx.eval("js", source)
         return cx
     }
 
-    private fun initBundleSource(): Source? = Source.newBuilder(
-        "js",
-        this::class.java.getResourceAsStream("/server/main.js")?.reader() ?: throw FileNotFoundException(),
-        "main.js"
-    ).build()
+    private fun initBundleSource(): String? = this::class.java.getResource("/server/main.js")?.readText()
 
     private fun getTemplate(templateName: String): String {
         return this::class.java.getResource("/static/$templateName.html").readText()
@@ -77,6 +70,7 @@ class GraalJsEngine {
     class WriteContent(val writer: Writer) : Consumer<String> {
         @HostAccess.Export
         override fun accept(res: String) {
+            println("write content")
             writer.write(res)
         }
 

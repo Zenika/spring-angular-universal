@@ -3,18 +3,20 @@ import '@angular/localize/init';
 
 import { renderApplication } from '@angular/platform-server'
 import { AppComponent } from './src/app/app.component'
-import { provideRouter } from '@angular/router'
+import { provideRouter, withEnabledBlockingInitialNavigation } from '@angular/router'
 import { routes } from './src/app-routes'
 
-declare function setHtmlContent (html: string): void
-declare let template: string
-declare let url: string
+declare let render: (template: string, model: Map<string, any>) => Promise<string>
 
-renderApplication(AppComponent, {
+render = (template: string, model: Map<string, any>) => renderApplication(AppComponent, {
   appId: 'server-app',
   document: template,
-  url: '/',
+  url: model.get("url") ?? "",
   providers: [
-    provideRouter(routes),
+    provideRouter(
+      routes,
+      withEnabledBlockingInitialNavigation()
+    ),
   ]
-}).then(html => setHtmlContent(html))
+})
+
